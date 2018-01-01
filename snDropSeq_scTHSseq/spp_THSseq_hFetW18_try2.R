@@ -9,12 +9,12 @@ require(spp)
 require(parallel)
 
 # valid chromosmes
-chrl <- paste('chr',c(1:22, 'X','Y' ),sep=''); names(chrl) <- chrl;
-n.cores=30
-if (F) {
+chrl <- paste('chr',c(1:22, 'X', 'Y' ),sep=''); names(chrl) <- chrl;
+n.cores=40
+if (T) {
 
 # read and count reads per library
-path = "../ubam"
+path = "/home/th170/hFet_18/ubam/"
 bamfiles <- list.files(path, pattern='.*bam$')
 names(bamfiles) <- gsub(".bam","",bamfiles)
 length(bamfiles)
@@ -29,7 +29,7 @@ table(is.na(reads))
 
 names(reads) <- bamfiles
 reads <- na.omit(reads)
-cairo_pdf("hFet.reads.hist.pdf", width = 6, height = 6.6)
+cairo_pdf("output/hFet.reads.hist.pdf", width = 6, height = 6.6)
   hist(log10(reads+1), breaks=50, main = "hFet")
   th = 3.0
   abline(v=th, col="red")
@@ -41,14 +41,14 @@ head(bamfiles.hFet)
 
 save(
   bamfiles.hFet,
-  file="bamfiles_used.RData"
+  file="output/bamfiles_used.RData"
 )
 
-write.txt(file="bamfiles_used.tsv", bamfiles.hFet )
+write.table(file="output/bamfiles_used.tsv", bamfiles.hFet )
 
 } else {
 
-load("bamfiles_used.RData")
+load("output/bamfiles_used.RData")
 
 }
 
@@ -144,7 +144,7 @@ bandwidth = 500
 step = 100
 thr = 5
 span = 10
-fdr <- 10e-8
+fdr <- 1e-8
 
 ##smoothed.density <- get.smoothed.tag.density(lapply(pdata,function(d) abs(d$tags)),bandwidth=bandwidth,step=step,tag.shift=0,scale.by.dataset.size = F)
 #smoothed.density <- lapply(lapply(pdata,function(d) abs(d$tags)), function(d) {
@@ -263,8 +263,8 @@ df <- data.frame(seqnames=seqnames(gr),
                  scores=c(rep(".", length(gr))),
                  strands=strand(gr))
 head(df)
-write.table(df, file=paste0("results/hFet_peaks_spp_RMrepeatmask100_bandwidth", bandwidth, "_step", step, "_thr", thr, "_span", span, "_fdr", fdr, ".bed"), quote=F, sep="\t", row.names=F, col.names=F)
-save(peaks.spp, file=paste0("results/hFet_peaks_spp_RMrepeatmask100_bandwidth", bandwidth, "_step", step, "_thr", thr, "_span", span, "_fdr", fdr, ".RData"))   
+write.table(df, file=paste0("output/hFet_peaks_spp_RMrepeatmask100_bandwidth", bandwidth, "_step", step, "_thr", thr, "_span", span, "_fdr", fdr, ".bed"), quote=F, sep="\t", row.names=F, col.names=F)
+save(peaks.spp, file=paste0("output/hFet_peaks_spp_RMrepeatmask100_bandwidth", bandwidth, "_step", step, "_thr", thr, "_span", span, "_fdr", fdr, ".RData"))   
 
 
 
@@ -300,7 +300,7 @@ lapply(seq(length(curbams)), function(i) {
     } ))
     colnames(cov) <- cb
 
-    save(cov, file=paste0("results/", cbn, "_cov_peaks_spp_RMrepeatmask100_bandwidth", bandwidth, "_step", step, "_thr", thr, "_span", span, "_fdr", fdr, ".RData"))
+    save(cov, file=paste0("output/", cbn, "_cov_peaks_spp_RMrepeatmask100_bandwidth", bandwidth, "_step", step, "_thr", thr, "_span", span, "_fdr", fdr, ".RData"))
     rm(cov);
     gc();
 })
