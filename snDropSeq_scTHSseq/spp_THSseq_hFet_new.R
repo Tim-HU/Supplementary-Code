@@ -14,7 +14,8 @@ n.cores=40
 if (T) {
 
 # read and count reads per library
-path = "/home/th170/hFet_18/ubam/"
+args = commandArgs(trailingOnly=TRUE)
+path = args[1]
 bamfiles <- list.files(path, pattern='.*bam$')
 names(bamfiles) <- gsub(".bam","",bamfiles)
 length(bamfiles)
@@ -29,7 +30,7 @@ table(is.na(reads))
 
 names(reads) <- bamfiles
 reads <- na.omit(reads)
-cairo_pdf("output/hFet.reads.hist.pdf", width = 6, height = 6.6)
+cairo_pdf(paste0(path,"/../output/hFet.reads.hist.pdf", width = 6, height = 6.6)
   hist(log10(reads+1), breaks=50, main = "hFet")
   th = 3.0
   abline(v=th, col="red")
@@ -41,14 +42,14 @@ head(bamfiles.hFet)
 
 save(
   bamfiles.hFet,
-  file="output/bamfiles_used.RData"
+  file=paste0(path,"/../output/bamfiles_used.RData")
 )
 
-write.table(file="output/bamfiles_used.tsv", bamfiles.hFet )
+write.table(file=paste0(path,"/../output/bamfiles_used.tsv", bamfiles.hFet ) )
 
 } else {
 
-load("output/bamfiles_used.RData")
+load(paste0(path,"/../output/bamfiles_used.RData") )
 
 }
 
@@ -263,8 +264,8 @@ df <- data.frame(seqnames=seqnames(gr),
                  scores=c(rep(".", length(gr))),
                  strands=strand(gr))
 head(df)
-write.table(df, file=paste0("output/hFet_peaks_spp_RMrepeatmask100_bandwidth", bandwidth, "_step", step, "_thr", thr, "_span", span, "_fdr", fdr, ".bed"), quote=F, sep="\t", row.names=F, col.names=F)
-save(peaks.spp, file=paste0("output/hFet_peaks_spp_RMrepeatmask100_bandwidth", bandwidth, "_step", step, "_thr", thr, "_span", span, "_fdr", fdr, ".RData"))   
+write.table(df, file=paste0(path,"/../output/hFet_peaks_spp_RMrepeatmask100_bandwidth", bandwidth, "_step", step, "_thr", thr, "_span", span, "_fdr", fdr, ".bed"), quote=F, sep="\t", row.names=F, col.names=F)
+save(peaks.spp, file=paste0(path,"/../output/hFet_peaks_spp_RMrepeatmask100_bandwidth", bandwidth, "_step", step, "_thr", thr, "_span", span, "_fdr", fdr, ".RData"))   
 
 
 
@@ -302,7 +303,7 @@ lapply(seq(length(curbams)), function(i) {
     
     library(Matrix)
     cov = Matrix(cov,sparse=T)
-    save(cov, file=paste0("output/", cbn, "_cov_peaks_spp_RMrepeatmask100_bandwidth", bandwidth, "_step", step, "_thr", thr, "_span", span, "_fdr", fdr, ".RData"))
+    save(cov, file=paste0(path,"/../output/", cbn, "_cov_peaks_spp_RMrepeatmask100_bandwidth", bandwidth, "_step", step, "_thr", thr, "_span", span, "_fdr", fdr, ".RData"))
     rm(cov);
     gc();
 })
