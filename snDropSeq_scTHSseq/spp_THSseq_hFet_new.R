@@ -30,7 +30,7 @@ table(is.na(reads))
 
 names(reads) <- bamfiles
 reads <- na.omit(reads)
-cairo_pdf(paste0(path,"/../output/hFet.reads.hist.pdf", width = 6, height = 6.6)
+cairo_pdf( paste0(path,"/../output/hFet.reads.hist.pdf"), width = 6, height = 6.6) 
   hist(log10(reads+1), breaks=50, main = "hFet")
   th = 3.0
   abline(v=th, col="red")
